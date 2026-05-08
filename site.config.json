@@ -1,0 +1,22 @@
+{
+  "niche": "PLACEHOLDER",
+  "niche_short": "PLACEHOLDER",
+  "city": "PLACEHOLDER",
+  "state": "PLACEHOLDER",
+  "state_abbr": "XX",
+  "business_name": "PLACEHOLDER",
+  "domain": "placeholder.com",
+  "tracking_phone": "+1-555-555-5555",
+  "tracking_phone_display": "(555) 555-5555",
+  "form_email": "leads@placeholder.com",
+  "service_radius_miles": 30,
+  "lat": 39.8283,
+  "lng": -98.5795,
+  "established_year": 2018,
+  "services": ["Service A", "Service B"],
+  "service_areas": ["Suburb A", "Suburb B"],
+  "primary_color": "#1a4d2e",
+  "ga4_id": "",
+  "search_console_verification": "",
+  "schema": { "type": "LocalBusiness" }
+}

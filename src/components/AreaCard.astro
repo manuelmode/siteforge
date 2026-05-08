@@ -1,0 +1,11 @@
+---
+import { slugify } from '../lib/slug';
+interface Props {
+  name: string;
+}
+const { name } = Astro.props;
+const slug = slugify(name);
+---
+<a href={`/locations/${slug}/`} class="block border border-slate-200 rounded p-3 hover:border-emerald-500 transition text-center">
+  <span class="font-medium">{name}</span>
+</a>

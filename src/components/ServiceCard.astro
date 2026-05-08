@@ -1,0 +1,13 @@
+---
+import { slugify } from '../lib/slug';
+interface Props {
+  name: string;
+  description?: string;
+}
+const { name, description } = Astro.props;
+const slug = slugify(name);
+---
+<a href={`/services/${slug}/`} class="block border border-slate-200 rounded p-4 hover:border-emerald-500 transition">
+  <h3 class="font-semibold">{name}</h3>
+  {description && <p class="text-sm text-slate-600 mt-1">{description}</p>}
+</a>

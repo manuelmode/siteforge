@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import LocalBusiness from '../../components/schema/LocalBusiness.astro';
+import { config } from '../../lib/config';
+const title = `${config.niche} Services | ${config.business_name}`;
+const description = `All ${config.niche} services we offer in ${config.city}. Fair quotes, fast response.`;
+---
+<Base title={title} description={description}>
+  <Fragment slot="head"><LocalBusiness /></Fragment>
+  <section class="max-w-5xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold">{config.niche} Services in {config.city}</h1>
+    <div class="grid md:grid-cols-2 gap-3 mt-8">
+      {config.services.map((s) => <ServiceCard name={s} />)}
+    </div>
+  </section>
+</Base>

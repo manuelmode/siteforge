@@ -1,0 +1,17 @@
+---
+import { config } from '../lib/config';
+const year = new Date().getFullYear();
+---
+<footer class="bg-slate-50 border-t border-slate-200 mt-16">
+  <div class="max-w-5xl mx-auto px-4 py-10 text-sm text-slate-600">
+    <p class="font-semibold text-slate-900">{config.business_name}</p>
+    <p>Serving {config.city} since {config.established_year} · Free quotes · Mobile service available</p>
+    <p class="mt-2">Areas: {config.service_areas.join(', ')}</p>
+    <p class="mt-4">
+      <a href={`tel:${config.tracking_phone}`} class="font-semibold text-emerald-700">
+        Call {config.tracking_phone_display}
+      </a>
+    </p>
+    <p class="mt-6 text-xs">© {year} {config.business_name}. All rights reserved.</p>
+  </div>
+</footer>

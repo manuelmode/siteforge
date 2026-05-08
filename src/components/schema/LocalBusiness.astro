@@ -1,0 +1,25 @@
+---
+import { config } from '../../lib/config';
+interface Props {
+  areaServed?: string[];
+}
+const { areaServed } = Astro.props;
+const data = {
+  '@context': 'https://schema.org',
+  '@type': config.schema.type,
+  name: config.business_name,
+  telephone: config.tracking_phone,
+  url: `https://${config.domain}`,
+  priceRange: '$$',
+  foundingDate: `${config.established_year}-01-01`,
+  geo: { '@type': 'GeoCoordinates', latitude: config.lat, longitude: config.lng },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: config.city,
+    addressRegion: config.state_abbr,
+    addressCountry: 'US',
+  },
+  areaServed: areaServed ?? [config.city, ...config.service_areas],
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(data)}></script>

@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import CallButton from '../components/CallButton.astro';
+import LocalBusiness from '../components/schema/LocalBusiness.astro';
+import Breadcrumb from '../components/schema/Breadcrumb.astro';
+import { config } from '../lib/config';
+const title = `About ${config.business_name} | ${config.niche} in ${config.city}`;
+const description = `Trusted ${config.niche} in ${config.city} since ${config.established_year}. We give straight answers, fair quotes, and mobile service when it makes sense.`;
+const crumbs = [
+  { name: 'Home', url: `https://${config.domain}/` },
+  { name: 'About', url: `https://${config.domain}/about/` },
+];
+---
+<Base title={title} description={description} canonical={`https://${config.domain}/about/`}>
+  <Fragment slot="head">
+    <LocalBusiness />
+    <Breadcrumb crumbs={crumbs} />
+  </Fragment>
+  <article class="max-w-3xl mx-auto px-4 py-12 prose">
+    <h1>About {config.business_name}</h1>
+    <p>Serving {config.city} since {config.established_year}. Mobile service across {config.service_areas.slice(0, 3).join(', ')} and beyond.</p>
+    <p>We tell you what you need and what you don't. Most jobs get a fair quote on the phone before we ever roll out.</p>
+    <p>Call <a href={`tel:${config.tracking_phone}`}>{config.tracking_phone_display}</a> for a free assessment.</p>
+  </article>
+  <CallButton />
+</Base>

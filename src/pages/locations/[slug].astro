@@ -1,0 +1,37 @@
+---
+import Base from '../../layouts/Base.astro';
+import CallButton from '../../components/CallButton.astro';
+import LocalBusiness from '../../components/schema/LocalBusiness.astro';
+import Breadcrumb from '../../components/schema/Breadcrumb.astro';
+import { config } from '../../lib/config';
+import { slugify } from '../../lib/slug';
+
+export function getStaticPaths() {
+  const all = [config.city, ...config.service_areas];
+  return all.map((area: string) => ({
+    params: { slug: slugify(area) },
+    props: { area },
+  }));
+}
+const { area } = Astro.props;
+const title = `${config.niche} in ${area}, ${config.state_abbr} | ${config.business_name}`;
+const description = `${config.niche} for ${area} residents and businesses. Mobile service. Call ${config.tracking_phone_display}.`;
+const url = `https://${config.domain}/locations/${Astro.params.slug}/`;
+const crumbs = [
+  { name: 'Home', url: `https://${config.domain}/` },
+  { name: 'Areas', url: `https://${config.domain}/locations/` },
+  { name: area, url },
+];
+---
+<Base title={title} description={description} canonical={url}>
+  <Fragment slot="head">
+    <LocalBusiness areaServed={[area]} />
+    <Breadcrumb crumbs={crumbs} />
+  </Fragment>
+  <article class="max-w-3xl mx-auto px-4 py-12 prose">
+    <h1>{config.niche} in {area}</h1>
+    <p>{description}</p>
+    <p><em>Local-pack-injected copy will overlay via <code>src/content/locations/{Astro.params.slug}.md</code> when generated.</em></p>
+  </article>
+  <CallButton />
+</Base>

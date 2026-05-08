@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactForm from '../components/ContactForm.astro';
+import CallButton from '../components/CallButton.astro';
+import LocalBusiness from '../components/schema/LocalBusiness.astro';
+import Breadcrumb from '../components/schema/Breadcrumb.astro';
+import { config } from '../lib/config';
+const title = `Contact ${config.business_name} | ${config.tracking_phone_display}`;
+const description = `Call or text ${config.tracking_phone_display} for ${config.niche} in ${config.city}. Free quotes, fast response.`;
+const mapSrc = `https://www.google.com/maps?q=${config.lat},${config.lng}&z=11&output=embed`;
+const crumbs = [
+  { name: 'Home', url: `https://${config.domain}/` },
+  { name: 'Contact', url: `https://${config.domain}/contact/` },
+];
+---
+<Base title={title} description={description} canonical={`https://${config.domain}/contact/`}>
+  <Fragment slot="head">
+    <LocalBusiness />
+    <Breadcrumb crumbs={crumbs} />
+  </Fragment>
+  <section class="max-w-3xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold">Contact Us</h1>
+    <p class="mt-2 text-lg">
+      Call <a class="font-bold text-emerald-700" href={`tel:${config.tracking_phone}`}>{config.tracking_phone_display}</a> for the fastest response.
+    </p>
+    <div class="mt-8">
+      <ContactForm />
+    </div>
+    <iframe class="mt-8 w-full aspect-video border" src={mapSrc} loading="lazy" title={`Service area: ${config.city}`}></iframe>
+    <p class="text-xs text-slate-500 mt-2">Service area shown. We don't operate from a fixed shop — we come to you.</p>
+  </section>
+  <CallButton />
+</Base>
