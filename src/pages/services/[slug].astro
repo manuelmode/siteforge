@@ -1,4 +1,5 @@
 ---
+import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import CallButton from '../../components/CallButton.astro';
 import LocalBusiness from '../../components/schema/LocalBusiness.astro';
@@ -7,13 +8,18 @@ import Breadcrumb from '../../components/schema/Breadcrumb.astro';
 import { config } from '../../lib/config';
 import { slugify } from '../../lib/slug';
 
-export function getStaticPaths() {
-  return config.services.map((service: string) => ({
-    params: { slug: slugify(service) },
-    props: { service },
-  }));
+export async function getStaticPaths() {
+  const entries = await getCollection('services');
+  const entryBySlug = new Map(entries.map((e) => [e.id, e]));
+  return config.services.map((service: string) => {
+    const slug = slugify(service);
+    return {
+      params: { slug },
+      props: { service, entry: entryBySlug.get(slug) ?? null },
+    };
+  });
 }
-const { service } = Astro.props;
+const { service, entry } = Astro.props;
 const title = `${service} in ${config.city}, ${config.state_abbr} | ${config.business_name}`;
 const description = `${service} in ${config.city}. Call ${config.tracking_phone_display} for a free quote.`;
 const url = `https://${config.domain}/services/${Astro.params.slug}/`;
@@ -22,6 +28,7 @@ const crumbs = [
   { name: 'Services', url: `https://${config.domain}/services/` },
   { name: service, url },
 ];
+const Content = entry ? (await render(entry)).Content : null;
 ---
 <Base title={title} description={description} canonical={url}>
   <Fragment slot="head">
@@ -29,11 +36,14 @@ const crumbs = [
     <ServiceSchema name={service} description={description} />
     <Breadcrumb crumbs={crumbs} />
   </Fragment>
-  <article class="max-w-3xl mx-auto px-4 py-12 prose">
+  <article class="max-w-3xl mx-auto px-4 py-12 prose prose-slate">
     <h1>{service} in {config.city}</h1>
-    <p>{description}</p>
-    <p>For a free assessment, call <a href={`tel:${config.tracking_phone}`}>{config.tracking_phone_display}</a>.</p>
-    <p><em>Per-service detailed copy is overlaid via Markdown content (see <code>src/content/services/{Astro.params.slug}.md</code>) when present.</em></p>
+    <p class="lead">{description}</p>
+    {Content && <Content />}
+    <p class="mt-8">
+      For a free assessment, call
+      <a href={`tel:${config.tracking_phone}`}>{config.tracking_phone_display}</a>.
+    </p>
   </article>
   <CallButton />
 </Base>

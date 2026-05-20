@@ -1,4 +1,5 @@
 ---
+import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import CallButton from '../../components/CallButton.astro';
 import LocalBusiness from '../../components/schema/LocalBusiness.astro';
@@ -6,14 +7,19 @@ import Breadcrumb from '../../components/schema/Breadcrumb.astro';
 import { config } from '../../lib/config';
 import { slugify } from '../../lib/slug';
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
   const all = [config.city, ...config.service_areas];
-  return all.map((area: string) => ({
-    params: { slug: slugify(area) },
-    props: { area },
-  }));
+  const entries = await getCollection('locations');
+  const entryBySlug = new Map(entries.map((e) => [e.id, e]));
+  return all.map((area: string) => {
+    const slug = slugify(area);
+    return {
+      params: { slug },
+      props: { area, entry: entryBySlug.get(slug) ?? null },
+    };
+  });
 }
-const { area } = Astro.props;
+const { area, entry } = Astro.props;
 const title = `${config.niche} in ${area}, ${config.state_abbr} | ${config.business_name}`;
 const description = `${config.niche} for ${area} residents and businesses. Mobile service. Call ${config.tracking_phone_display}.`;
 const url = `https://${config.domain}/locations/${Astro.params.slug}/`;
@@ -22,16 +28,21 @@ const crumbs = [
   { name: 'Areas', url: `https://${config.domain}/locations/` },
   { name: area, url },
 ];
+const Content = entry ? (await render(entry)).Content : null;
 ---
 <Base title={title} description={description} canonical={url}>
   <Fragment slot="head">
     <LocalBusiness areaServed={[area]} />
     <Breadcrumb crumbs={crumbs} />
   </Fragment>
-  <article class="max-w-3xl mx-auto px-4 py-12 prose">
+  <article class="max-w-3xl mx-auto px-4 py-12 prose prose-slate">
     <h1>{config.niche} in {area}</h1>
-    <p>{description}</p>
-    <p><em>Local-pack-injected copy will overlay via <code>src/content/locations/{Astro.params.slug}.md</code> when generated.</em></p>
+    <p class="lead">{description}</p>
+    {Content && <Content />}
+    <p class="mt-8">
+      For a free assessment in {area}, call
+      <a href={`tel:${config.tracking_phone}`}>{config.tracking_phone_display}</a>.
+    </p>
   </article>
   <CallButton />
 </Base>

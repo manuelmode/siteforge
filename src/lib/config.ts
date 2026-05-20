@@ -20,6 +20,7 @@ export interface SiteConfig {
   primary_color: string;
   ga4_id: string;
   search_console_verification: string;
+  og_image_path?: string;
   schema: { type: string };
 }
 

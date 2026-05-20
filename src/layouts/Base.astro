@@ -10,7 +10,7 @@ interface Props {
   canonical?: string;
 }
 const { title, description, canonical } = Astro.props;
-const ogImage = `${Astro.site}og.png`;
+const ogImage = config.og_image_path ? `${Astro.site}${config.og_image_path.replace(/^\//, '')}` : null;
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -22,8 +22,8 @@ const ogImage = `${Astro.site}og.png`;
   {canonical && <link rel="canonical" href={canonical} />}
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:image" content={ogImage} />
-  <meta name="twitter:card" content="summary_large_image" />
+  {ogImage && <meta property="og:image" content={ogImage} />}
+  <meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
   {config.search_console_verification && (
     <meta name="google-site-verification" content={config.search_console_verification} />
   )}
