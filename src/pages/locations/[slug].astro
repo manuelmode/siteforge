@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import CallButton from '../../components/CallButton.astro';
 import FAQSection from '../../components/FAQSection.astro';
@@ -41,9 +42,11 @@ const faqs = entry?.data.faqs ?? [];
   </Fragment>
   {heroImg && (
     <figure class="max-w-5xl mx-auto px-4 pt-8">
-      <img src={heroImg} alt={heroAlt}
-           class="w-full h-64 md:h-96 object-cover rounded-lg shadow-sm"
-           loading="eager" decoding="async" width="1600" height="900" />
+      <Image src={heroImg} alt={heroAlt}
+             widths={[640, 960, 1280, 1600]}
+             sizes="(min-width: 1024px) 1024px, 100vw"
+             class="w-full h-64 md:h-96 object-cover rounded-lg shadow-sm"
+             loading="eager" />
     </figure>
   )}
   <article class="max-w-3xl mx-auto px-4 py-12 prose prose-slate">
