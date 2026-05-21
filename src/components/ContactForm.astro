@@ -7,22 +7,27 @@ const redirectAfter = `https://${config.domain}/thanks/`;
   <input type="hidden" name="_redirect" value={redirectAfter} />
   <div>
     <label for="cf-name" class="block text-sm font-medium text-slate-700">Your name</label>
-    <input id="cf-name" type="text" name="name" required autocomplete="name"
+    <input id="cf-name" type="text" name="name" required autocomplete="name" maxlength="100"
            class="mt-1 w-full border border-slate-300 rounded-md p-2 focus:border-teal-700 focus:ring-1 focus:ring-teal-700 focus:outline-none" />
   </div>
   <div>
     <label for="cf-phone" class="block text-sm font-medium text-slate-700">Phone number</label>
     <input id="cf-phone" type="tel" name="phone" required inputmode="tel" autocomplete="tel"
-           class="mt-1 w-full border border-slate-300 rounded-md p-2 focus:border-teal-700 focus:ring-1 focus:ring-teal-700 focus:outline-none" />
+           placeholder="(555) 123-4567"
+           pattern="\(\d{3}\) \d{3}-\d{4}"
+           maxlength="14"
+           title="10-digit US phone, like (719) 555-1234"
+           class="mt-1 w-full border border-slate-300 rounded-md p-2 focus:border-teal-700 focus:ring-1 focus:ring-teal-700 focus:outline-none invalid:border-rose-400 invalid:focus:border-rose-500 invalid:focus:ring-rose-500" />
+    <p class="mt-1 text-xs text-slate-500">Formats automatically as you type. 10-digit US numbers only.</p>
   </div>
   <div>
     <label for="cf-email" class="block text-sm font-medium text-slate-700">Email <span class="text-slate-500 font-normal">(optional)</span></label>
-    <input id="cf-email" type="email" name="email" autocomplete="email"
+    <input id="cf-email" type="email" name="email" autocomplete="email" maxlength="200"
            class="mt-1 w-full border border-slate-300 rounded-md p-2 focus:border-teal-700 focus:ring-1 focus:ring-teal-700 focus:outline-none" />
   </div>
   <div>
     <label for="cf-message" class="block text-sm font-medium text-slate-700">What's going on?</label>
-    <textarea id="cf-message" name="message" rows="3" placeholder="Brief description of what you need"
+    <textarea id="cf-message" name="message" rows="3" maxlength="2000" placeholder="Brief description of what you need"
               class="mt-1 w-full border border-slate-300 rounded-md p-2 focus:border-teal-700 focus:ring-1 focus:ring-teal-700 focus:outline-none"></textarea>
   </div>
   {/* honeypot — bots fill this, humans don't see it */}
@@ -44,3 +49,30 @@ const redirectAfter = `https://${config.domain}/thanks/`;
 <p class="text-xs text-slate-500 mt-3">
   Or call <a href={`tel:${config.tracking_phone}`} class="text-teal-700 font-semibold">{config.tracking_phone_display}</a> directly for the fastest response.
 </p>
+<script is:inline data-astro-rerun>
+  (function () {
+    const fmt = (digits) => {
+      if (digits.length === 0) return '';
+      if (digits.length <= 3) return '(' + digits;
+      if (digits.length <= 6) return '(' + digits.slice(0, 3) + ') ' + digits.slice(3);
+      return '(' + digits.slice(0, 3) + ') ' + digits.slice(3, 6) + '-' + digits.slice(6, 10);
+    };
+    const wirePhoneInputs = () => {
+      const inputs = document.querySelectorAll('input[type="tel"][name="phone"]:not([data-phone-wired])');
+      for (const el of inputs) {
+        el.setAttribute('data-phone-wired', '1');
+        const handler = () => {
+          let raw = el.value.replace(/\D/g, '');
+          // accept 11-digit US numbers starting with 1 by stripping the country code
+          if (raw.length === 11 && raw.startsWith('1')) raw = raw.slice(1);
+          if (raw.length > 10) raw = raw.slice(0, 10);
+          el.value = fmt(raw);
+        };
+        el.addEventListener('input', handler);
+        el.addEventListener('paste', () => setTimeout(handler, 0));
+      }
+    };
+    wirePhoneInputs();
+    document.addEventListener('astro:page-load', wirePhoneInputs);
+  })();
+</script>
