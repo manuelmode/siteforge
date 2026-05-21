@@ -6,6 +6,8 @@ const locations = defineCollection({
   schema: z.object({
     area: z.string(),
     headline: z.string().optional(),
+    hero_image: z.string().url().optional(),
+    hero_alt: z.string().optional(),
   }),
 });
 
@@ -14,6 +16,8 @@ const services = defineCollection({
   schema: z.object({
     service: z.string(),
     headline: z.string().optional(),
+    hero_image: z.string().url().optional(),
+    hero_alt: z.string().optional(),
   }),
 });
 

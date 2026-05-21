@@ -29,12 +29,21 @@ const crumbs = [
   { name: area, url },
 ];
 const Content = entry ? (await render(entry)).Content : null;
+const heroImg = entry?.data.hero_image;
+const heroAlt = entry?.data.hero_alt ?? `${config.niche} in ${area}, ${config.state_abbr}`;
 ---
 <Base title={title} description={description} canonical={url}>
   <Fragment slot="head">
     <LocalBusiness areaServed={[area]} />
     <Breadcrumb crumbs={crumbs} />
   </Fragment>
+  {heroImg && (
+    <figure class="max-w-5xl mx-auto px-4 pt-8">
+      <img src={heroImg} alt={heroAlt}
+           class="w-full h-64 md:h-96 object-cover rounded-lg shadow-sm"
+           loading="eager" decoding="async" width="1600" height="900" />
+    </figure>
+  )}
   <article class="max-w-3xl mx-auto px-4 py-12 prose prose-slate">
     <h1>{config.niche} in {area}</h1>
     <p class="lead">{description}</p>

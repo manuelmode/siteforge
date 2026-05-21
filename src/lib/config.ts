@@ -21,6 +21,8 @@ export interface SiteConfig {
   ga4_id: string;
   search_console_verification: string;
   og_image_path?: string;
+  hero_image_url?: string;
+  hero_image_alt?: string;
   schema: { type: string };
 }
 
