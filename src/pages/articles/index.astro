@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CallButton from '../../components/CallButton.astro';
+import LocalBusiness from '../../components/schema/LocalBusiness.astro';
+import Breadcrumb from '../../components/schema/Breadcrumb.astro';
+import { config } from '../../lib/config';
+
+const entries = (await getCollection('articles')).sort(
+  (a, b) => b.data.pub_date.valueOf() - a.data.pub_date.valueOf()
+);
+const title = `Articles | ${config.business_name}`;
+const description = `Practical guides on ${config.niche.toLowerCase()} in ${config.city} — what to look for, what to do about it, and when to call.`;
+const crumbs = [
+  { name: 'Home', url: `https://${config.domain}/` },
+  { name: 'Articles', url: `https://${config.domain}/articles/` },
+];
+const fmtDate = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+<Base title={title} description={description} canonical={`https://${config.domain}/articles/`}>
+  <Fragment slot="head">
+    <LocalBusiness />
+    <Breadcrumb crumbs={crumbs} />
+  </Fragment>
+  <section class="max-w-5xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold">Articles</h1>
+    <p class="mt-2 text-lg text-slate-600 max-w-2xl">
+      Practical guides for {config.city} homeowners on {config.niche.toLowerCase()}, written by people who do the work — not marketing copy.
+    </p>
+    {entries.length === 0 ? (
+      <p class="mt-8 text-slate-600">No articles yet.</p>
+    ) : (
+      <ul class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {entries.map((entry) => (
+          <li class="border border-slate-200 rounded-lg overflow-hidden bg-white hover:border-teal-600 transition-colors">
+            <a href={`/articles/${entry.id}/`} class="block">
+              {entry.data.hero_image && (
+                <img src={entry.data.hero_image} alt={entry.data.hero_alt ?? entry.data.title}
+                     class="w-full h-48 object-cover" loading="lazy" decoding="async" width="800" height="400" />
+              )}
+              <div class="p-5">
+                <p class="text-xs text-slate-500 uppercase tracking-wide">{fmtDate(entry.data.pub_date)}</p>
+                <h2 class="mt-1 text-xl font-bold text-slate-900">{entry.data.title}</h2>
+                <p class="mt-2 text-slate-600">{entry.data.description}</p>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+  <CallButton />
+</Base>

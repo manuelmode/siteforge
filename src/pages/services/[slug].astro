@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import CallButton from '../../components/CallButton.astro';
+import FAQSection from '../../components/FAQSection.astro';
 import LocalBusiness from '../../components/schema/LocalBusiness.astro';
 import ServiceSchema from '../../components/schema/Service.astro';
 import Breadcrumb from '../../components/schema/Breadcrumb.astro';
@@ -31,6 +32,7 @@ const crumbs = [
 const Content = entry ? (await render(entry)).Content : null;
 const heroImg = entry?.data.hero_image;
 const heroAlt = entry?.data.hero_alt ?? `${service} in ${config.city}, ${config.state_abbr}`;
+const faqs = entry?.data.faqs ?? [];
 ---
 <Base title={title} description={description} canonical={url}>
   <Fragment slot="head">
@@ -49,6 +51,7 @@ const heroAlt = entry?.data.hero_alt ?? `${service} in ${config.city}, ${config.
     <h1>{service} in {config.city}</h1>
     <p class="lead">{description}</p>
     {Content && <Content />}
+    {faqs.length > 0 && <FAQSection items={faqs} />}
     <p class="mt-8">
       For a free assessment, call
       <a href={`tel:${config.tracking_phone}`}>{config.tracking_phone_display}</a>.

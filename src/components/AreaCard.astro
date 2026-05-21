@@ -6,6 +6,6 @@ interface Props {
 const { name } = Astro.props;
 const slug = slugify(name);
 ---
-<a href={`/locations/${slug}/`} class="block border border-slate-200 rounded p-3 hover:border-emerald-500 transition text-center">
+<a href={`/locations/${slug}/`} class="block border border-slate-200 rounded p-3 hover:border-teal-600 transition text-center">
   <span class="font-medium">{name}</span>
 </a>

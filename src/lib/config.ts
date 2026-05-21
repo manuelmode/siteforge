@@ -23,6 +23,7 @@ export interface SiteConfig {
   og_image_path?: string;
   hero_image_url?: string;
   hero_image_alt?: string;
+  turnstile_site_key?: string;
   schema: { type: string };
 }
 

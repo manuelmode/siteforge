@@ -1,0 +1,15 @@
+---
+import { config } from '../lib/config';
+interface Props {
+  size?: 'sm' | 'md' | 'lg';
+}
+const { size = 'md' } = Astro.props;
+const textSize = size === 'sm' ? 'text-base' : size === 'lg' ? 'text-xl' : 'text-lg';
+const iconSize = size === 'sm' ? 'w-5 h-5' : size === 'lg' ? 'w-7 h-7' : 'w-6 h-6';
+---
+<a href="/" class="flex items-center gap-2 font-bold text-slate-900 hover:text-teal-700 transition-colors">
+  <svg viewBox="0 0 24 24" class={`${iconSize} text-teal-700 shrink-0`} fill="currentColor" aria-hidden="true">
+    <path d="M12 2.5c-.4 0-.78.16-1.06.44C9.16 4.72 4 10.42 4 14.5a8 8 0 0 0 16 0c0-4.08-5.16-9.78-6.94-11.56A1.5 1.5 0 0 0 12 2.5zm0 17a5 5 0 0 1-5-5c0-.7.27-1.55.73-2.5a.5.5 0 0 1 .94.27 4.5 4.5 0 0 0 4.66 5.66.5.5 0 0 1 .03 1c-.12 0-.24.07-.36.07z"/>
+  </svg>
+  <span class={textSize}>{config.business_name}</span>
+</a>

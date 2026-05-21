@@ -1,0 +1,66 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CallButton from '../../components/CallButton.astro';
+import LocalBusiness from '../../components/schema/LocalBusiness.astro';
+import Breadcrumb from '../../components/schema/Breadcrumb.astro';
+import { config } from '../../lib/config';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('articles');
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const url = `https://${config.domain}/articles/${entry.id}/`;
+const heroImg = entry.data.hero_image;
+const heroAlt = entry.data.hero_alt ?? entry.data.title;
+const crumbs = [
+  { name: 'Home', url: `https://${config.domain}/` },
+  { name: 'Articles', url: `https://${config.domain}/articles/` },
+  { name: entry.data.title, url },
+];
+const fmtDate = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": entry.data.title,
+  "description": entry.data.description,
+  "datePublished": entry.data.pub_date.toISOString(),
+  "url": url,
+  "publisher": {
+    "@type": "Organization",
+    "name": config.business_name,
+    "url": `https://${config.domain}/`
+  },
+  ...(heroImg ? { "image": heroImg } : {})
+};
+---
+<Base title={`${entry.data.title} | ${config.business_name}`} description={entry.data.description} canonical={url}>
+  <Fragment slot="head">
+    <LocalBusiness />
+    <Breadcrumb crumbs={crumbs} />
+    <script type="application/ld+json" set:html={JSON.stringify(articleSchema)}></script>
+  </Fragment>
+  {heroImg && (
+    <figure class="max-w-5xl mx-auto px-4 pt-8">
+      <img src={heroImg} alt={heroAlt}
+           class="w-full h-64 md:h-96 object-cover rounded-lg shadow-sm"
+           loading="eager" decoding="async" width="1600" height="900" />
+    </figure>
+  )}
+  <article class="max-w-3xl mx-auto px-4 py-12 prose prose-slate">
+    <p class="text-sm uppercase tracking-wide text-slate-500">{fmtDate(entry.data.pub_date)}</p>
+    <h1>{entry.data.title}</h1>
+    <p class="lead">{entry.data.description}</p>
+    <Content />
+    <p class="mt-10 text-sm text-slate-600">
+      Questions? Call <a href={`tel:${config.tracking_phone}`}>{config.tracking_phone_display}</a> or
+      <a href="/contact/">send a message</a>.
+    </p>
+  </article>
+  <CallButton />
+</Base>

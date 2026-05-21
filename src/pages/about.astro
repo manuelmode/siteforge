@@ -5,7 +5,7 @@ import LocalBusiness from '../components/schema/LocalBusiness.astro';
 import Breadcrumb from '../components/schema/Breadcrumb.astro';
 import { config } from '../lib/config';
 const title = `About ${config.business_name} | ${config.niche} in ${config.city}`;
-const description = `Trusted ${config.niche} in ${config.city} since ${config.established_year}. We give straight answers, fair quotes, and mobile service when it makes sense.`;
+const description = `${config.business_name} connects ${config.city} homeowners with vetted ${config.niche.toLowerCase()} contractors. Honest assessments, fixed quotes, no upsells.`;
 const crumbs = [
   { name: 'Home', url: `https://${config.domain}/` },
   { name: 'About', url: `https://${config.domain}/about/` },
@@ -16,11 +16,42 @@ const crumbs = [
     <LocalBusiness />
     <Breadcrumb crumbs={crumbs} />
   </Fragment>
-  <article class="max-w-3xl mx-auto px-4 py-12 prose">
+  <article class="max-w-3xl mx-auto px-4 py-12 prose prose-slate">
     <h1>About {config.business_name}</h1>
-    <p>Serving {config.city} since {config.established_year}. Mobile service across {config.service_areas.slice(0, 3).join(', ')} and beyond.</p>
-    <p>We tell you what you need and what you don't. Most jobs get a fair quote on the phone before we ever roll out.</p>
-    <p>Call <a href={`tel:${config.tracking_phone}`}>{config.tracking_phone_display}</a> for a free assessment.</p>
+    <p class="lead">{config.business_name} is the local-services site connecting {config.city} homeowners with vetted {config.niche.toLowerCase()} contractors who do the actual work.</p>
+
+    <h2>What this site is</h2>
+    <p>
+      You searched for {config.niche.toLowerCase()} in {config.city} and ended up here. This is a small, focused site that exists to make sure when someone in {config.city} needs {config.niche.toLowerCase()}, the call goes to a real local contractor who does honest work — not to a national franchise that drives in from out of state. The phone number on this site rings the contractor we currently work with. They give you the assessment, the quote, and do the job.
+    </p>
+
+    <h2>How we pick who answers the phone</h2>
+    <p>
+      Contractors who take calls from this site meet a short list of conditions: industry-standard process compliance, in-business at least three years locally, no high-pressure or upsell-driven complaints in their record, and willingness to give an honest "you don't need this" when that's the right answer.
+    </p>
+
+    <h2>What you can expect on a call</h2>
+    <ul>
+      <li>A free assessment with no pressure to hire</li>
+      <li>A written fixed-price quote — not an hourly rate</li>
+      <li>An honest answer if your situation doesn't actually need the service you called about</li>
+      <li>Documentation suitable for insurance, future buyers, or other contractors</li>
+    </ul>
+
+    <h2>Why we don't show a shop address</h2>
+    <p>
+      This is a mobile service. The contractors who answer this phone come to your home with their equipment; nobody needs to come to a shop. We list service-area cities — {config.city}, {config.service_areas.slice(0, 3).join(', ')}, and others — because that's where the work happens. We don't list a street address because we don't operate from a fixed retail location.
+    </p>
+
+    <h2>What we won't do</h2>
+    <p>
+      Fake testimonials, invented badges, "trusted by N homeowners" counters, stock photos of a fictional team. We've chosen not to do those things because they're not honest and because they're not necessary — the work speaks for itself once a contractor is on-site.
+    </p>
+
+    <h2>Serving {config.city} since {config.established_year}</h2>
+    <p>
+      Call <a href={`tel:${config.tracking_phone}`}>{config.tracking_phone_display}</a> for a free assessment.
+    </p>
   </article>
   <CallButton />
 </Base>

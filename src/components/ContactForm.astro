@@ -3,11 +3,43 @@ import { config } from '../lib/config';
 const action = `https://forms.${config.domain}/submit`;
 ---
 <form action={action} method="POST" class="space-y-3">
-  <input type="text" name="name" required placeholder="Your name" class="w-full border rounded p-2" />
-  <input type="tel" name="phone" required placeholder="Phone number" class="w-full border rounded p-2" />
-  <input type="email" name="email" placeholder="Email (optional)" class="w-full border rounded p-2" />
-  <textarea name="message" rows="3" placeholder="Brief description of what you need" class="w-full border rounded p-2"></textarea>
+  <div>
+    <label for="cf-name" class="block text-sm font-medium text-slate-700">Your name</label>
+    <input id="cf-name" type="text" name="name" required autocomplete="name"
+           class="mt-1 w-full border border-slate-300 rounded-md p-2 focus:border-teal-700 focus:ring-1 focus:ring-teal-700 focus:outline-none" />
+  </div>
+  <div>
+    <label for="cf-phone" class="block text-sm font-medium text-slate-700">Phone number</label>
+    <input id="cf-phone" type="tel" name="phone" required inputmode="tel" autocomplete="tel"
+           class="mt-1 w-full border border-slate-300 rounded-md p-2 focus:border-teal-700 focus:ring-1 focus:ring-teal-700 focus:outline-none" />
+  </div>
+  <div>
+    <label for="cf-email" class="block text-sm font-medium text-slate-700">Email <span class="text-slate-500 font-normal">(optional)</span></label>
+    <input id="cf-email" type="email" name="email" autocomplete="email"
+           class="mt-1 w-full border border-slate-300 rounded-md p-2 focus:border-teal-700 focus:ring-1 focus:ring-teal-700 focus:outline-none" />
+  </div>
+  <div>
+    <label for="cf-message" class="block text-sm font-medium text-slate-700">What's going on?</label>
+    <textarea id="cf-message" name="message" rows="3" placeholder="Brief description of what you need"
+              class="mt-1 w-full border border-slate-300 rounded-md p-2 focus:border-teal-700 focus:ring-1 focus:ring-teal-700 focus:outline-none"></textarea>
+  </div>
   <input type="hidden" name="_form_email" value={config.form_email} />
-  <button type="submit" class="bg-emerald-600 text-white px-5 py-2 rounded font-semibold">Get a Free Quote</button>
+  {/* honeypot — bots fill this, humans don't see it */}
+  <div aria-hidden="true" class="absolute -left-[10000px] w-px h-px overflow-hidden">
+    <label for="cf-website">Website</label>
+    <input id="cf-website" type="text" name="website" tabindex="-1" autocomplete="off" />
+  </div>
+  {config.turnstile_site_key && (
+    <div class="cf-turnstile" data-sitekey={config.turnstile_site_key} data-theme="light"></div>
+  )}
+  <button type="submit"
+          class="bg-teal-700 hover:bg-teal-800 transition-colors text-white px-5 py-2.5 rounded-md font-semibold">
+    Get a call back
+  </button>
 </form>
-<p class="text-xs text-slate-500 mt-2">Or call <a href={`tel:${config.tracking_phone}`} class="text-emerald-700 font-semibold">{config.tracking_phone_display}</a> directly.</p>
+{config.turnstile_site_key && (
+  <script is:inline async defer src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+)}
+<p class="text-xs text-slate-500 mt-3">
+  Or call <a href={`tel:${config.tracking_phone}`} class="text-teal-700 font-semibold">{config.tracking_phone_display}</a> directly for the fastest response.
+</p>

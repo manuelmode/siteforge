@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 import { config } from '../lib/config';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -19,6 +20,7 @@ const ogImage = config.og_image_path ? `${Astro.site}${config.og_image_path.repl
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="preconnect" href="https://rsms.me/" />
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  <ClientRouter />
   <title>{title}</title>
   <meta name="description" content={description} />
   {canonical && <link rel="canonical" href={canonical} />}
