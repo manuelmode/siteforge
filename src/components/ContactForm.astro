@@ -1,8 +1,10 @@
 ---
 import { config } from '../lib/config';
-const action = `https://forms.${config.domain}/submit`;
+const action = config.form_action_url ?? 'https://leads-handler.moraleslocal.workers.dev/';
+const redirectAfter = `https://${config.domain}/thanks/`;
 ---
 <form action={action} method="POST" class="space-y-3">
+  <input type="hidden" name="_redirect" value={redirectAfter} />
   <div>
     <label for="cf-name" class="block text-sm font-medium text-slate-700">Your name</label>
     <input id="cf-name" type="text" name="name" required autocomplete="name"
@@ -23,7 +25,6 @@ const action = `https://forms.${config.domain}/submit`;
     <textarea id="cf-message" name="message" rows="3" placeholder="Brief description of what you need"
               class="mt-1 w-full border border-slate-300 rounded-md p-2 focus:border-teal-700 focus:ring-1 focus:ring-teal-700 focus:outline-none"></textarea>
   </div>
-  <input type="hidden" name="_form_email" value={config.form_email} />
   {/* honeypot — bots fill this, humans don't see it */}
   <div aria-hidden="true" class="absolute -left-[10000px] w-px h-px overflow-hidden">
     <label for="cf-website">Website</label>

@@ -24,6 +24,7 @@ export interface SiteConfig {
   hero_image_url?: string;
   hero_image_alt?: string;
   turnstile_site_key?: string;
+  form_action_url?: string;
   schema: { type: string };
 }
 

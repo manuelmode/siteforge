@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import CallButton from '../components/CallButton.astro';
+import LocalBusiness from '../components/schema/LocalBusiness.astro';
+import Breadcrumb from '../components/schema/Breadcrumb.astro';
+import { config } from '../lib/config';
+const title = `Thanks — we'll be in touch | ${config.business_name}`;
+const description = `Your message has been received. Expect a call back from ${config.business_name} within a few hours.`;
+const crumbs = [
+  { name: 'Home', url: `https://${config.domain}/` },
+  { name: 'Thanks', url: `https://${config.domain}/thanks/` },
+];
+---
+<Base title={title} description={description} canonical={`https://${config.domain}/thanks/`}>
+  <Fragment slot="head">
+    <LocalBusiness />
+    <Breadcrumb crumbs={crumbs} />
+    <meta name="robots" content="noindex, follow" />
+  </Fragment>
+  <section class="max-w-3xl mx-auto px-4 py-16 text-center">
+    <div class="mx-auto mb-6 w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center">
+      <svg viewBox="0 0 24 24" class="w-10 h-10 text-teal-700" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <h1 class="text-3xl md:text-4xl font-bold">Thanks — we got your message.</h1>
+    <p class="mt-4 text-lg text-slate-700 max-w-xl mx-auto">
+      Someone from {config.business_name} will call you back within a few hours during business hours, or first thing tomorrow if you sent this in the evening.
+    </p>
+    <p class="mt-8 text-slate-600">
+      If your situation is urgent, call us directly instead of waiting for the callback:
+    </p>
+    <a href={`tel:${config.tracking_phone}`}
+       class="inline-block mt-4 bg-amber-500 hover:bg-amber-400 transition-colors text-slate-900 px-6 py-3 rounded font-bold shadow-md">
+      Call {config.tracking_phone_display}
+    </a>
+    <p class="mt-12 text-sm text-slate-500">
+      <a href="/" class="text-teal-700 hover:underline">Back to home</a>
+    </p>
+  </section>
+  <CallButton />
+</Base>
