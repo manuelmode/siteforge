@@ -5,10 +5,13 @@ import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
 import config from './site.config.json' with { type: 'json' };
 
+import cloudflare from '@astrojs/cloudflare';
+
 export default defineConfig({
   site: `https://${config.domain}`,
   trailingSlash: 'always',
   build: { inlineStylesheets: 'auto' },
+
   // passthroughImageService — does NOT transform images at build time.
   // Cloudflare's static-assets build env can't compile sharp's native
   // bindings, so the default sharp service silently fell back to runtime
@@ -18,6 +21,8 @@ export default defineConfig({
   // gaining "the images actually load". JPEGs are pre-sized at 2400w
   // and edge-cached by Cloudflare so LCP is still reasonable.
   image: { service: passthroughImageService() },
+
   integrations: [sitemap(), mdx()],
   vite: { plugins: [tailwindcss()] },
+  adapter: cloudflare(),
 });
